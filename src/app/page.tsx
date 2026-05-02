@@ -1,42 +1,41 @@
 "use client"
 
-import { SingUpForm } from "@/types/SingUpForm";
-import { Input } from "@mui/material";
-import { Controller, SubmitHandler, useForm } from "react-hook-form";
+import { singUpFormSchema } from "@/types/SingUpForm";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
 
 
 export default function Home() {
 
-  const { handleSubmit, control } = useForm<SingUpForm>();
+  const { register, handleSubmit } = useForm({
+    resolver: zodResolver(singUpFormSchema)
+  });
 
-  const handleFormSubmit: SubmitHandler<SingUpForm> = (data) => {
-    console.log(data);
+  const handleSubmitForm = () => {
+    console.log('vai enviar');
   }
 
   return (
     <div className="container mx-auto">
-        <form onSubmit={handleSubmit(handleFormSubmit)}>
-
-          <Controller 
-            control={control}
-            name="name"
-            render={({ field, fieldState }) => <Input { ...field } value={field.value ?? ""} error={fieldState.invalid} />}
-            rules={{required: true, minLength: 2, maxLength: 20}}
+        <form onSubmit={handleSubmit(handleSubmitForm)}>
+          <input
+            {...register('name')} 
+            type="text" 
+            className="border bg-white p-3 m-3 text-black"
           />
 
-          <Controller 
-            control={control}
-            name="password"
-            render={({ field, fieldState }) => <Input { ...field } value={field.value ?? ""} error={fieldState.invalid} />}
+          <input
+            {...register('password')}  
+            type="text" 
+            className="border bg-white p-3 m-3 text-black"
           />
 
-          <Controller 
-            control={control}
-            name="age"
-            render={({ field, fieldState }) => <Input { ...field } value={field.value ?? ""} error={fieldState.invalid} />}
-            rules={{required: true, min: 18, max: 120}}
+          <input
+            {...register('age', { valueAsNumber: true})}  
+            type="number" 
+            className="border bg-white p-3 m-3 text-black"
           />
-
+        
           <input type="submit" value="Enviar" />
         </form>
 
